@@ -180,3 +180,188 @@ Copyright © 2024 MacLightController. Tutti i diritti riservati.
 ## Contatti
 
 Per bug report e feature request, apri una issue su GitHub.
+
+---
+
+## English
+
+**Modular Automation System for macOS Apple Silicon**
+
+MacLightController is a native macOS app designed for Apple Silicon that automates system features based on time triggers, events, and custom conditions. Its primary use case is automatic keyboard backlight control.
+
+## Features
+
+- **Menu Bar App**: Runs quietly in the menu bar
+- **Modular Architecture**: Plugin-based system for extensibility
+- **Keyboard Backlight Control**: Automatic backlight on/off
+- **Flexible Triggers**: Specific times, sunrise/sunset, intervals
+- **Intuitive Interface**: Modern native SwiftUI UI
+
+## System Requirements
+
+| Requirement | Specification |
+|-----------|---------------|
+| **macOS** | 13.0 (Ventura) or later |
+| **Processor** | Apple Silicon (M1/M2/M3/M4) |
+| **RAM** | 4 GB (system) |
+| **Disk** | 50 MB |
+
+## Installation
+
+### From Xcode
+
+1. Clone the repository
+2. Open `MacLightController.xcodeproj` in Xcode 15+
+3. Select the `MacLightController` target
+4. Build and Run (⌘R)
+
+### Important Notes
+
+- The app requires IOKit access to control hardware
+- App Sandbox is disabled to allow direct hardware access
+- For distribution, signing and notarization are required
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     MacLightController                       │
+├─────────────────────────────────────────────────────────────┤
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐     │
+│  │  Menu Bar   │    │  Settings   │    │ Notifications│     │
+│  │   (UI)      │    │    (UI)     │    │             │     │
+│  └──────┬──────┘    └──────┬──────┘    └──────┬──────┘     │
+│         └──────────────────┼──────────────────┘             │
+│                  ┌─────────▼─────────┐                      │
+│                  │    Core Engine    │                      │
+│                  └─────────┬─────────┘                      │
+│         ┌──────────────────┼──────────────────┐             │
+│  ┌──────▼──────┐  ┌────────▼────────┐  ┌─────▼─────┐       │
+│  │  Scheduler  │  │ Plugin Manager  │  │  Config   │       │
+│  └──────┬──────┘  └────────┬────────┘  │   Store   │       │
+│         │                  │           └───────────┘       │
+│         │         ┌────────▼────────┐                      │
+│         │         │ Keyboard Plugin │                      │
+│         │         └────────┬────────┘                      │
+│         │                  │                                │
+│         └──────────────────▼────────────────────────────────│
+│                        IOKit                                │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## Usage
+
+### Menu Bar
+
+Click the menu bar icon to:
+- Turn the backlight on/off
+- Adjust brightness with the slider
+- View active automations
+- Open settings
+
+### Create an Automation
+
+1. Open settings
+2. Go to the "Automations" tab
+3. Click the "+" button
+4. Configure:
+   - **Name**: A descriptive name
+   - **Trigger**: When to run (time, sunrise, sunset, interval)
+   - **Action**: What to do (on, off, set brightness)
+5. Save
+
+### Available Triggers
+
+| Trigger | Description |
+|---------|-------------|
+| **Time** | Run at a specific time, with day selection |
+| **Sunrise** | Run at sunrise (optional offset) |
+| **Sunset** | Run at sunset (optional offset) |
+| **Interval** | Run every X seconds/minutes/hours |
+
+### Available Actions
+
+| Action | Description |
+|--------|-------------|
+| **On** | Set brightness to maximum |
+| **Off** | Set brightness to zero |
+| **Toggle** | Toggle the current state |
+| **Set Brightness** | Set a specific value (0-100%) |
+| **Fade To** | Smooth transition to the target value |
+
+## Project Structure
+
+```
+MacLightController/
+├── App/
+│   ├── MacLightControllerApp.swift
+│   └── AppDelegate.swift
+├── Core/
+│   ├── Engine/
+│   ├── Plugins/
+│   ├── Scheduler/
+│   └── Storage/
+├── Models/
+├── Plugins/
+│   └── KeyboardBacklight/
+├── Services/
+├── UI/
+│   ├── MenuBar/
+│   ├── Settings/
+│   ├── Automations/
+│   └── Shared/
+└── Resources/
+```
+
+## Future Plugins (Roadmap)
+
+- **Display Brightness**: Screen brightness control
+- **Dark Mode**: Automatic dark mode toggle
+- **Audio Volume**: System volume control
+- **Focus Mode**: Automatic Focus activation
+
+## Development
+
+### Build
+
+```bash
+xcodebuild -project MacLightController.xcodeproj \
+           -scheme MacLightController \
+           -configuration Debug \
+           build
+```
+
+### Tests
+
+```bash
+xcodebuild test -project MacLightController.xcodeproj \
+                -scheme MacLightController \
+                -destination 'platform=macOS'
+```
+
+## Troubleshooting
+
+### "Keyboard backlight service not found"
+
+This error can occur if:
+- The Mac does not have a backlit keyboard
+- The driver is not properly loaded
+
+Try restarting the Mac.
+
+### Notifications not working
+
+Check that notifications are enabled in:
+System Settings > Notifications > MacLightController
+
+### Sunrise/Sunset not working
+
+Verify that location is configured in settings, or enable "Use automatic location".
+
+## License
+
+Copyright © 2024 MacLightController. All rights reserved.
+
+## Contact
+
+For bug reports and feature requests, open an issue on GitHub.
