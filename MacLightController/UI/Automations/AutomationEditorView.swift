@@ -78,13 +78,20 @@ struct AutomationEditorView: View {
                             HStack {
                                 Text("Azione")
                                 Spacer()
-                                Picker("", selection: $selectedAction) {
-                                    ForEach(pluginInfo.actions) { action in
-                                        Text(action.displayName).tag(action.id)
-                                    }
-                                }
-                                .labelsHidden()
-                                .fixedSize()
+                         Picker("", selection: $selectedAction) {
+                            ForEach(pluginInfo.actions) { action in
+                                Text(action.displayName).tag(action.id)
+                            }
+                        }
+                        .labelsHidden()
+                        .fixedSize()
+                        .onChange(of: selectedAction) { newValue in
+                            // Clear parameters when switching to an action with no parameters
+                            if let action = pluginInfo.actions.first(where: { $0.id == newValue }),
+                               action.parameters.isEmpty {
+                                parameters.removeAll()
+                            }
+                        }
                             }
                             
                             Divider()

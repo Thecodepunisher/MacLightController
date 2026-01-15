@@ -169,6 +169,9 @@ struct AutomationDetailView: View {
     let onDelete: () -> Void
     let onExecute: () -> Void
     
+    @State private var showingExecutionAlert = false
+    @State private var executionMessage = ""
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             // Header
@@ -204,7 +207,11 @@ struct AutomationDetailView: View {
             
             // Footer Actions
             HStack {
-                Button("Esegui test") { onExecute() }
+                Button("Esegui test") { 
+                    executionMessage = "Esecuzione dell'automazione '\(rule.name)' in corso..."
+                    showingExecutionAlert = true
+                    onExecute() 
+                }
                     .buttonStyle(MinimalButtonStyle())
                 Spacer()
                 Button("Elimina") { onDelete() }
@@ -212,6 +219,11 @@ struct AutomationDetailView: View {
             }
         }
         .padding()
+        .alert("Test Automazione", isPresented: $showingExecutionAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text(executionMessage)
+        }
     }
 }
 
